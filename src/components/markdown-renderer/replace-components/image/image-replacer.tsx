@@ -8,6 +8,7 @@ import { Element } from 'domhandler'
 import React from 'react'
 import { ComponentReplacer } from '../ComponentReplacer'
 import { ProxyImageFrame } from './proxy-image-frame'
+import { IframeSendingPlaceholderImageFrame } from './iframe-sending-placeholder-image-frame'
 
 export type ImageClickHandler = (event: React.MouseEvent<HTMLImageElement, MouseEvent>) => void
 
@@ -23,19 +24,30 @@ export class ImageReplacer extends ComponentReplacer {
   }
 
   public getReplacement(node: Element): React.ReactElement | undefined {
-    if (node.name === 'img' && node.attribs) {
+    if (!(node.name === 'img' && node.attribs)) {
+      return
+    }
+    if (node.attribs.src === 'https://') {
       return (
-        <ProxyImageFrame
-          id={node.attribs.id}
-          className={`${node.attribs.class} cursor-zoom-in`}
-          src={node.attribs.src}
+        <IframeSendingPlaceholderImageFrame
           alt={node.attribs.alt}
           title={node.attribs.title}
           width={node.attribs.width}
           height={node.attribs.height}
-          onClick={this.clickHandler}
         />
       )
     }
+    return (
+      <ProxyImageFrame
+        id={node.attribs.id}
+        className={`${node.attribs.class} cursor-zoom-in`}
+        src={node.attribs.src}
+        alt={node.attribs.alt}
+        title={node.attribs.title}
+        width={node.attribs.width}
+        height={node.attribs.height}
+        onClick={this.clickHandler}
+      />
+    )
   }
 }

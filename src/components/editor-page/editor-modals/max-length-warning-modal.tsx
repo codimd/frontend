@@ -7,16 +7,17 @@
 import React from 'react'
 import { Button, Modal } from 'react-bootstrap'
 import { Trans, useTranslation } from 'react-i18next'
+import { useApplicationState } from '../../../hooks/common/use-application-state'
 import { CommonModal } from '../../common/modals/common-modal'
 
 export interface MaxLengthWarningModalProps {
   show: boolean
   onHide: () => void
-  maxLength: number
 }
 
-export const MaxLengthWarningModal: React.FC<MaxLengthWarningModalProps> = ({ show, onHide, maxLength }) => {
+export const MaxLengthWarningModal: React.FC<MaxLengthWarningModalProps> = ({ show, onHide }) => {
   useTranslation()
+  const maxLength = useApplicationState((state) => state.config.maxDocumentLength)
 
   return (
     <CommonModal

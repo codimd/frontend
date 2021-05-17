@@ -108,6 +108,14 @@ export class IframeRendererToEditorCommunicator extends IframeCommunicator<
     })
   }
 
+  public sendImageDataUri(dataUri: string, fileName: string): void {
+    this.sendMessageToOtherSide({
+      type: RenderIframeMessageType.IMAGE_UPLOAD,
+      dataUri,
+      fileName
+    })
+  }
+
   protected handleEvent(event: MessageEvent<EditorToRendererIframeMessage>): boolean | undefined {
     const renderMessage = event.data
     switch (renderMessage.type) {

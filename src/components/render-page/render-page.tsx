@@ -3,6 +3,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
+
 import React from 'react'
 import { useApplyDarkMode } from '../../hooks/common/use-apply-dark-mode'
 import { IframeMarkdownRenderer } from './iframe-markdown-renderer'

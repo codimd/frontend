@@ -15,7 +15,6 @@ export const handleUpload = (file: File, editor: Editor): void => {
     return
   }
   if (!supportedMimeTypes.includes(file.type)) {
-    // this mimetype is not supported
     return
   }
   const cursor = editor.getCursor()
@@ -24,6 +23,7 @@ export const handleUpload = (file: File, editor: Editor): void => {
   const insertCode = (replacement: string) => {
     editor.replaceRange(replacement, cursor, { line: cursor.line, ch: cursor.ch + uploadPlaceholder.length }, '+input')
   }
+
   editor.replaceRange(uploadPlaceholder, cursor, cursor, '+input')
   uploadFile(noteId, file)
     .then(({ link }) => {
