@@ -9,7 +9,7 @@ import { Button } from 'react-bootstrap'
 import { Trans, useTranslation } from 'react-i18next'
 import { ForkAwesomeIcon } from '../../../common/fork-awesome/fork-awesome-icon'
 import './placeholder-image-frame.scss'
-import { supportedMimeTypesJoined } from '../../../common/upload-image-mimetypes'
+import { acceptedMimeTypes } from '../../../common/upload-image-mimetypes'
 import { buildPlaceholderSizeCss } from './util'
 
 export interface PlaceholderImageFrameProps {
@@ -67,7 +67,7 @@ export const PlaceholderImageFrame: React.FC<PlaceholderImageFrameProps & Placeh
         <input
           type='file'
           className='d-none'
-          accept={supportedMimeTypesJoined}
+          accept={acceptedMimeTypes}
           onChange={onChangeHandler}
           ref={fileInputReference}
         />
