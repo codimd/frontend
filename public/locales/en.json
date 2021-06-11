@@ -431,7 +431,7 @@
         "embeddings": {
             "clickToLoad": "Click to load",
             "placeholderImage": {
-                "placeholderText": "Placeholder \"{{altText}}\"",
+                "placeholderText": "Placeholder",
                 "upload": "Upload image"
             }
         }

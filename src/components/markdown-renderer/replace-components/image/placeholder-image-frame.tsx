@@ -59,7 +59,7 @@ export const PlaceholderImageFrame: React.FC<PlaceholderImageFrameProps & Placeh
 
   return (
     <span
-      className='image-drop d-flex flex-column align-items-center bg-primary text-light py-4'
+      className='image-drop d-inline-flex flex-column align-items-center bg-primary text-light p-4'
       style={buildPlaceholderSizeCss(width, height)}
       onDrop={onDropHandler}
       onDragOver={onDragOverHandler}>
@@ -70,12 +70,14 @@ export const PlaceholderImageFrame: React.FC<PlaceholderImageFrameProps & Placeh
         onChange={onChangeHandler}
         ref={fileInputReference}
       />
-      <Trans
-        i18nKey={'editor.embeddings.placeholderImage.placeholderText'}
-        values={{ altText: alt ?? title ?? '' }}
-        className='my-2'
-        onChange={onChangeHandler}
-      />
+      <span>
+        <Trans
+          i18nKey={'editor.embeddings.placeholderImage.placeholderText'}
+          className='my-2'
+          onChange={onChangeHandler}
+        />
+      </span>
+      <span className={'altText'}>{alt ?? title ?? ''}</span>
       <ForkAwesomeIcon icon={'upload'} size={'2x'} className='my-2' />
       <Button variant={'light'} onClick={() => fileInputReference.current?.click()}>
         <Trans i18nKey={'editor.embeddings.placeholderImage.upload'} className='my-2' />

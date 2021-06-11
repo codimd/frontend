@@ -7,4 +7,13 @@
 .image-drop {
   border: 3px dashed white;
   border-radius: 3px;
+
+  .altText {
+    text-overflow: ellipsis;
+    flex: 1 1;
+    overflow: hidden;
+    width: 100%;
+    white-space: nowrap;
+  }
 }
+
