@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: AGPL-3.0-only
  */
 
-import React, { Fragment, useCallback, useRef } from 'react'
+import React, { useCallback, useRef } from 'react'
 import { Button } from 'react-bootstrap'
 import { Trans, useTranslation } from 'react-i18next'
 import { ForkAwesomeIcon } from '../../../common/fork-awesome/fork-awesome-icon'
@@ -58,30 +58,28 @@ export const PlaceholderImageFrame: React.FC<PlaceholderImageFrameProps & Placeh
   )
 
   return (
-    <Fragment>
-      <span
-        className='image-drop d-flex flex-column align-items-center bg-primary text-light py-4'
-        style={buildPlaceholderSizeCss(width, height)}
-        onDrop={onDropHandler}
-        onDragOver={onDragOverHandler}>
-        <input
-          type='file'
-          className='d-none'
-          accept={acceptedMimeTypes}
-          onChange={onChangeHandler}
-          ref={fileInputReference}
-        />
-        <Trans
-          i18nKey={'editor.embeddings.placeholderImage.placeholderText'}
-          values={{ altText: alt ?? title ?? '' }}
-          className='my-2'
-          onChange={onChangeHandler}
-        />
-        <ForkAwesomeIcon icon={'upload'} size={'2x'} className='my-2' />
-        <Button variant={'light'} onClick={() => fileInputReference.current?.click()}>
-          <Trans i18nKey={'editor.embeddings.placeholderImage.upload'} className='my-2' />
-        </Button>
-      </span>
-    </Fragment>
+    <span
+      className='image-drop d-flex flex-column align-items-center bg-primary text-light py-4'
+      style={buildPlaceholderSizeCss(width, height)}
+      onDrop={onDropHandler}
+      onDragOver={onDragOverHandler}>
+      <input
+        type='file'
+        className='d-none'
+        accept={acceptedMimeTypes}
+        onChange={onChangeHandler}
+        ref={fileInputReference}
+      />
+      <Trans
+        i18nKey={'editor.embeddings.placeholderImage.placeholderText'}
+        values={{ altText: alt ?? title ?? '' }}
+        className='my-2'
+        onChange={onChangeHandler}
+      />
+      <ForkAwesomeIcon icon={'upload'} size={'2x'} className='my-2' />
+      <Button variant={'light'} onClick={() => fileInputReference.current?.click()}>
+        <Trans i18nKey={'editor.embeddings.placeholderImage.upload'} className='my-2' />
+      </Button>
+    </span>
   )
 }
