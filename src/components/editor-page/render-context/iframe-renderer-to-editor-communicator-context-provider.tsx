@@ -30,15 +30,17 @@ export const useIFrameRendererToEditorCommunicator: () => IframeRendererToEditor
 export const IframeRendererToEditorCommunicatorContextProvider: React.FC = ({ children }) => {
   const editorOrigin = useSelector((state: ApplicationState) => state.config.iframeCommunication.editorOrigin)
   const currentIFrameCommunicator = useMemo<IframeRendererToEditorCommunicator>(() => {
-    const newCommunicator = new IframeRendererToEditorCommunicator()
-    newCommunicator.setMessageTarget(window.parent, editorOrigin)
-    return newCommunicator
-  }, [editorOrigin])
+    return new IframeRendererToEditorCommunicator()
+  }, [])
+
+  useEffect(() => {
+    currentIFrameCommunicator.setMessageTarget(window.parent, editorOrigin)
+  }, [currentIFrameCommunicator, editorOrigin])
 
   useEffect(() => {
     const currentIFrame = currentIFrameCommunicator
-    currentIFrame?.sendRendererReady()
-    return () => currentIFrame?.unregisterEventListener()
+    currentIFrame.sendRendererReady()
+    return () => currentIFrame.unregisterEventListener()
   }, [currentIFrameCommunicator])
 
   return (

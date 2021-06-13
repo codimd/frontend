@@ -28,7 +28,7 @@ export const IframeSendingPlaceholderImageFrame: React.FC<PlaceholderImageFrameP
   const onImageUpload = useCallback(
     (file: File) => {
       convertFileToDataUri(file)
-        .then((dataUri) => iframeCommunicator?.sendImageDataUri(dataUri, file.name))
+        .then((dataUri) => iframeCommunicator.sendImageDataUri(dataUri, file.name))
         .catch((error: ProgressEvent) => console.error('Failed to upload image', error))
     },
     [iframeCommunicator]
