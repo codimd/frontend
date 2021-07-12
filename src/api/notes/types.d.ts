@@ -15,7 +15,8 @@ export interface NoteDto {
 
 export interface NoteMetadataDto {
   id: string
-  alias: string
+  primaryAlias: string | null
+  aliases: string[]
   version: number
   title: string
   description: string

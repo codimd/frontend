@@ -12,13 +12,16 @@ import {
   NoteType
 } from '../../components/editor-page/note-frontmatter/note-frontmatter'
 import {
+  AddAliasAction,
   NoteDetails,
   NoteDetailsAction,
   NoteDetailsActionType,
+  RemoveAliasAction,
   SetCheckboxInMarkdownContentAction,
   SetNoteDetailsAction,
   SetNoteDetailsFromServerAction,
   SetNoteFrontmatterFromRenderingAction,
+  SetPrimaryAliasAction,
   UpdateNoteTitleByFirstHeadingAction
 } from './types'
 import { noteDtoToNoteDetails } from '../../api/notes/dto-methods'
@@ -31,7 +34,8 @@ export const initialState: NoteDetails = {
     timestamp: DateTime.fromSeconds(0),
     userName: ''
   },
-  alias: '',
+  aliases: [],
+  primaryAlias: null,
   viewCount: 0,
   authorship: [],
   noteTitle: '',
@@ -84,6 +88,22 @@ export const NoteDetailsReducer: Reducer<NoteDetails, NoteDetailsAction> = (
           (action as SetCheckboxInMarkdownContentAction).lineInMarkdown,
           (action as SetCheckboxInMarkdownContentAction).checked
         )
+      }
+    case NoteDetailsActionType.ADD_ALIAS:
+      return {
+        ...state,
+        aliases: state.aliases.concat([(action as AddAliasAction).alias])
+      }
+    case NoteDetailsActionType.REMOVE_ALIAS:
+      return {
+        ...state,
+        aliases: state.aliases.filter((alias) => alias !== (action as RemoveAliasAction).alias),
+        primaryAlias: state.primaryAlias === (action as RemoveAliasAction).alias ? null : state.primaryAlias
+      }
+    case NoteDetailsActionType.SET_PRIMARY_ALIAS:
+      return {
+        ...state,
+        primaryAlias: (action as SetPrimaryAliasAction).alias
       }
     default:
       return state

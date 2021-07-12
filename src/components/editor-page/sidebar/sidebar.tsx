@@ -17,6 +17,7 @@ import { ShareSidebarEntry } from './share-sidebar-entry'
 import './style/theme.scss'
 import { DocumentSidebarMenuSelection } from './types'
 import { UsersOnlineSidebarMenu } from './users-online-sidebar-menu/users-online-sidebar-menu'
+import { AliasesSidebarEntry } from './aliases-sidebar-entry'
 
 export const Sidebar: React.FC = () => {
   const sideBarRef = useRef<HTMLDivElement>(null)
@@ -58,6 +59,7 @@ export const Sidebar: React.FC = () => {
           onClick={toggleValue}
         />
         <ShareSidebarEntry hide={selectionIsNotNone} />
+        <AliasesSidebarEntry hide={selectionIsNotNone} />
         <DeleteNoteSidebarEntry hide={selectionIsNotNone} />
         <PinNoteSidebarEntry hide={selectionIsNotNone} />
       </div>

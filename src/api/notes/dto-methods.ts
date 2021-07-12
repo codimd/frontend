@@ -22,7 +22,8 @@ export const noteDtoToNoteDetails = (note: NoteDto): NoteDetails => {
     },
     firstHeading: initialState.firstHeading,
     viewCount: note.metadata.viewCount,
-    alias: note.metadata.alias,
+    aliases: note.metadata.aliases,
+    primaryAlias: note.metadata.primaryAlias,
     authorship: note.metadata.editedBy
   }
 }

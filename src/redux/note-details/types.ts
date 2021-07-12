@@ -14,7 +14,10 @@ export enum NoteDetailsActionType {
   SET_NOTE_DATA_FROM_SERVER = 'note-details/data/server/set',
   SET_NOTE_FRONTMATTER = 'note-details/frontmatter/set',
   UPDATE_NOTE_TITLE_BY_FIRST_HEADING = 'note-details/update-note-title-by-first-heading',
-  SET_CHECKBOX_IN_MARKDOWN_CONTENT = 'note-details/toggle-checkbox-in-markdown-content'
+  SET_CHECKBOX_IN_MARKDOWN_CONTENT = 'note-details/toggle-checkbox-in-markdown-content',
+  ADD_ALIAS = 'note-details/aliases/add',
+  REMOVE_ALIAS = 'note-details/aliases/remove',
+  SET_PRIMARY_ALIAS = 'note-details/aliases/set-primary'
 }
 
 interface LastChange {
@@ -28,7 +31,8 @@ export interface NoteDetails {
   createTime: DateTime
   lastChange: LastChange
   viewCount: number
-  alias: string
+  aliases: string[]
+  primaryAlias: string | null
   authorship: string[]
   noteTitle: string
   firstHeading?: string
@@ -63,4 +67,28 @@ export interface SetCheckboxInMarkdownContentAction extends NoteDetailsAction {
   type: NoteDetailsActionType.SET_CHECKBOX_IN_MARKDOWN_CONTENT
   lineInMarkdown: number
   checked: boolean
+}
+
+/**
+ * Action definition for the {@link addNoteAlias} redux method.
+ */
+export interface AddAliasAction extends NoteDetailsAction {
+  type: NoteDetailsActionType.ADD_ALIAS
+  alias: string
+}
+
+/**
+ * Action definition for the {@link removeNoteAlias} redux method.
+ */
+export interface RemoveAliasAction extends NoteDetailsAction {
+  type: NoteDetailsActionType.REMOVE_ALIAS
+  alias: string
+}
+
+/**
+ * Action definition for the {@link makeNoteAliasPrimary} redux method.
+ */
+export interface SetPrimaryAliasAction extends NoteDetailsAction {
+  type: NoteDetailsActionType.SET_PRIMARY_ALIAS
+  alias: string
 }

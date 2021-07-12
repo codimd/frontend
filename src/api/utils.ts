@@ -22,8 +22,19 @@ export const getApiUrl = (): string => {
   return store.getState().apiUrl.apiUrl
 }
 
+/**
+ * Error class for invalid API responses.
+ */
+export class ApiResponseError extends Error {}
+
+/**
+ * Checks if the HTTP status code of a given response matches a given status code.
+ * @param response The HTTP response to check.
+ * @param code The numeric HTTP response code to expect. Defaults to 200 (OK).
+ * @throws ApiResponseError if the response code of the request does not match.
+ */
 export const expectResponseCode = (response: Response, code = 200): void => {
   if (response.status !== code) {
-    throw new Error(`response code is not ${code}`)
+    throw new ApiResponseError(`response code is not ${code}`)
   }
 }
