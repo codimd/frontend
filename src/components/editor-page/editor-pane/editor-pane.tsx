@@ -40,6 +40,8 @@ import { ToolBar } from './tool-bar/tool-bar'
 import { handleUpload } from './upload-handler'
 import { handleFilePaste, handleTablePaste, PasteEvent } from './tool-bar/utils/pasteHandlers'
 import { useApplicationState } from '../../../hooks/common/use-application-state'
+import { useIFrameEditorToRendererCommunicator } from '../render-context/iframe-editor-to-renderer-communicator-context-provider'
+import { store } from '../../../redux'
 
 export interface EditorPaneProps {
   onContentChange: (content: string) => void
@@ -79,8 +81,6 @@ export const EditorPane: React.FC<EditorPaneProps & ScrollProps> = ({
   onMakeScrollSource
 }) => {
   const { t } = useTranslation()
-  const maxLength = useApplicationState((state) => state.config.maxDocumentLength)
-  const smartPasteEnabled = useApplicationState((state) => state.editorConfig.smartPaste)
   const [showMaxLengthWarning, setShowMaxLengthWarning] = useState(false)
   const maxLengthWarningAlreadyShown = useRef(false)
   const [editor, setEditor] = useState<Editor>()
@@ -92,21 +92,41 @@ export const EditorPane: React.FC<EditorPaneProps & ScrollProps> = ({
   const [editorScroll, setEditorScroll] = useState<ScrollInfo>()
   const onEditorScroll = useCallback((editor: Editor, data: ScrollInfo) => setEditorScroll(data), [])
 
-  const onPaste = useCallback(
-    (pasteEditor: Editor, event: PasteEvent) => {
-      if (!event || !event.clipboardData) {
-        return
-      }
-      if (smartPasteEnabled) {
-        const tableInserted = handleTablePaste(event, pasteEditor)
-        if (tableInserted) {
+  const iframeCommunicator = useIFrameEditorToRendererCommunicator()
+  useEffect(
+    () =>
+      iframeCommunicator.onImageUpload((dataUri, fileName) => {
+        if (!editor) {
           return
         }
-      }
-      handleFilePaste(event, pasteEditor)
-    },
-    [smartPasteEnabled]
+        if (!dataUri.startsWith('data:image/')) {
+          console.error('Received uri is no data uri and image!')
+          return
+        }
+
+        fetch(dataUri)
+          .then((result) => result.blob())
+          .then((blob) => {
+            const file = new File([blob], fileName, { type: blob.type })
+            handleUpload(file, editor)
+          })
+          .catch((error) => console.error(error))
+      }),
+    [editor, iframeCommunicator]
   )
+
+  const onPaste = useCallback((pasteEditor: Editor, event: PasteEvent) => {
+    if (!event || !event.clipboardData) {
+      return
+    }
+    if (store.getState().editorConfig.smartPaste) {
+      const tableInserted = handleTablePaste(event, pasteEditor)
+      if (tableInserted) {
+        return
+      }
+    }
+    handleFilePaste(event, pasteEditor)
+  }, [])
 
   useEffect(() => {
     if (!editor || !onScroll || !editorScroll) {
@@ -142,6 +162,7 @@ export const EditorPane: React.FC<EditorPaneProps & ScrollProps> = ({
 
   const onBeforeChange = useCallback(
     (editor: Editor, data: EditorChange, value: string) => {
+      const maxLength = store.getState().config.maxDocumentLength
       if (value.length > maxLength && !maxLengthWarningAlreadyShown.current) {
         setShowMaxLengthWarning(true)
         maxLengthWarningAlreadyShown.current = true
@@ -151,22 +172,16 @@ export const EditorPane: React.FC<EditorPaneProps & ScrollProps> = ({
       }
       onContentChange(value)
     },
-    [onContentChange, maxLength, maxLengthWarningAlreadyShown]
+    [onContentChange, maxLengthWarningAlreadyShown]
   )
-  const onEditorDidMount = useCallback(
-    (mountedEditor: Editor) => {
-      setStatusBarInfo(createStatusInfo(mountedEditor, maxLength))
-      setEditor(mountedEditor)
-    },
-    [maxLength]
-  )
+  const onEditorDidMount = useCallback((mountedEditor: Editor) => {
+    setStatusBarInfo(createStatusInfo(mountedEditor, store.getState().config.maxDocumentLength))
+    setEditor(mountedEditor)
+  }, [])
 
-  const onCursorActivity = useCallback(
-    (editorWithActivity: Editor) => {
-      setStatusBarInfo(createStatusInfo(editorWithActivity, maxLength))
-    },
-    [maxLength]
-  )
+  const onCursorActivity = useCallback((editorWithActivity: Editor) => {
+    setStatusBarInfo(createStatusInfo(editorWithActivity, store.getState().config.maxDocumentLength))
+  }, [])
 
   const onDrop = useCallback((dropEditor: Editor, event: DropEvent) => {
     if (
@@ -221,7 +236,7 @@ export const EditorPane: React.FC<EditorPaneProps & ScrollProps> = ({
 
   return (
     <div className={'d-flex flex-column h-100 position-relative'} onMouseEnter={onMakeScrollSource}>
-      <MaxLengthWarningModal show={showMaxLengthWarning} onHide={onMaxLengthHide} maxLength={maxLength} />
+      <MaxLengthWarningModal show={showMaxLengthWarning} onHide={onMaxLengthHide} />
       <ToolBar editor={editor} />
       <ControlledCodeMirror
         className={`overflow-hidden w-100 flex-fill ${ligaturesEnabled ? '' : 'no-ligatures'}`}

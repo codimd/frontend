@@ -19,7 +19,8 @@ export enum RenderIframeMessageType {
   ON_HEIGHT_CHANGE = 'ON_HEIGHT_CHANGE',
   SET_BASE_CONFIGURATION = 'SET_BASE_CONFIGURATION',
   GET_WORD_COUNT = 'GET_WORD_COUNT',
-  ON_WORD_COUNT_CALCULATED = 'ON_WORD_COUNT_CALCULATED'
+  ON_WORD_COUNT_CALCULATED = 'ON_WORD_COUNT_CALCULATED',
+  IMAGE_UPLOAD = 'IMAGE_UPLOAD'
 }
 
 export interface RendererToEditorSimpleMessage {
@@ -49,6 +50,12 @@ export interface GetWordCountMessage {
 export interface ImageClickedMessage {
   type: RenderIframeMessageType.IMAGE_CLICKED
   details: ImageDetails
+}
+
+export interface ImageUploadMessage {
+  type: RenderIframeMessageType.IMAGE_UPLOAD
+  dataUri: string
+  fileName: string
 }
 
 export interface SetMarkdownContentMessage {
@@ -103,6 +110,7 @@ export type RendererToEditorIframeMessage =
   | ImageClickedMessage
   | OnHeightChangeMessage
   | OnWordCountCalculatedMessage
+  | ImageUploadMessage
 
 export enum RendererType {
   DOCUMENT,

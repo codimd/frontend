@@ -28,6 +28,11 @@ export class IframeEditorToRendererCommunicator extends IframeCommunicator<
   private onImageClickedHandler?: (details: ImageDetails) => void
   private onHeightChangeHandler?: (height: number) => void
   private onWordCountCalculatedHandler?: (words: number) => void
+  private onImageUploadHandler?: (dataUri: string, fileName: string) => void
+
+  public onImageUpload(handler?: (dataUri: string, fileName: string) => void): void {
+    this.onImageUploadHandler = handler
+  }
 
   public onHeightChange(handler?: (height: number) => void): void {
     this.onHeightChangeHandler = handler
@@ -133,6 +138,8 @@ export class IframeEditorToRendererCommunicator extends IframeCommunicator<
       case RenderIframeMessageType.ON_WORD_COUNT_CALCULATED:
         this.onWordCountCalculatedHandler?.(renderMessage.words)
         return false
+      case RenderIframeMessageType.IMAGE_UPLOAD:
+        this.onImageUploadHandler?.(renderMessage.dataUri, renderMessage.fileName)
     }
   }
 }
