@@ -102,8 +102,8 @@
     "use-resize-observer": "7.0.0",
     "uuid": "8.3.2",
     "vega": "5.20.2",
-    "vega-embed": "6.17.0",
-    "vega-lite": "5.0.0",
+    "vega-embed": "6.18.2",
+    "vega-lite": "5.1.0",
     "words-count": "2.0.2"
   },
   "scripts": {
